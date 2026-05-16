@@ -1,0 +1,5 @@
+openai
+anthropic
+pandas
+colorama
+python-dotenv
