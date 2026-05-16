@@ -1,2 +1,28 @@
+# Environment variables
 .env
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environments
+venv/
+.env/
+
+# macOS
 .DS_Store
+
+# VS Code
+.vscode/
+
+# Benchmark outputs
+output/*.json
+output/*.md
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Logs
+*.log
