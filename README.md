@@ -123,7 +123,8 @@ llm-safety-evaluation-lab/
 ├── notes/
 │   ├── fortinet_2026_skills_gap.md
 │   └── malicious_chrome_extensions.md
-├── mini_safety_report_v2.md
+├── ├── reports/
+│   └── mini_safety_report_v2.md
 ├── requirements.txt
 ├── .env.example
 └── README.md
