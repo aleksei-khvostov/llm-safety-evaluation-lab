@@ -83,8 +83,6 @@ This finding aligns with real-world incidents involving:
 
 Live Testing Highlights (May 2026)
 
-![Benchmark Example](screenshots/benchmark_run_example.png)
-
 Strongest Safety Behaviors Observed
 
 * Attack-aware refusal
