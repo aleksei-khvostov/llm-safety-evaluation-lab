@@ -22,9 +22,7 @@ The goal is to study how modern LLMs behave under adversarial, ambiguous, and ma
 70+ manually crafted adversarial test cases covering:
 
 | Category | Tests | Key Risk |
-
 |---|---|---|
-
 | Prompt Injection | 15 | Instruction hierarchy bypass |
 | Hallucination | 15 | Fabricated facts presented as truth |
 | Sensitive Information Disclosure | 10 | Credential and PII exposure |
