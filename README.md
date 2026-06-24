@@ -149,7 +149,7 @@ Setup
 
 Clone the repository:
 
-git clone https://github.com/fsrxc2bvv9-ctrl/llm-safety-evaluation-lab.git
+git clone https://github.com/aleksei-khvostov/llm-safety-evaluation-lab.git
 cd llm-safety-evaluation-lab
 
 Install dependencies:
@@ -240,7 +240,7 @@ Background includes:
 
 Links
 
-* GitHub: https://github.com/fsrxc2bvv9-ctrl
+* GitHub: https://github.com/aleksei-khvostov
 * LinkedIn: https://www.linkedin.com/in/aleksei-khvostov/
 
 ⸻

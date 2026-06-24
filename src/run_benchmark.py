@@ -3,7 +3,7 @@ run_benchmark.py
 LLM Safety Evaluation Lab — Automated Benchmark Runner
 
 Author: Aleksei Khvostov
-GitHub: https://github.com/fsrxc2bvv9-ctrl
+GitHub: https://github.com/aleksei-khvostov
 LinkedIn: https://www.linkedin.com/in/aleksei-khvostov/
 
 Version: 1.2 | May 2026
