@@ -1,257 +1,45 @@
 # LLM Safety Evaluation Lab
-![Python](https://img.shields.io/badge/Python-3.13-blue)
-![OWASP](https://img.shields.io/badge/OWASP-LLM_Top_10-red)
-![Status](https://img.shields.io/badge/status-active-success)
-![License](https://img.shields.io/badge/license-MIT-green)
-An OWASP-inspired adversarial testing framework for evaluating LLM safety behavior across prompt injection, hallucination, social engineering, excessive agency, and related risk categories.
-Built as part of an independent AI Safety evaluation portfolio (May 2026).
----
-## Overview
-This project combines:
-- A structured red team attack library
-- Automated benchmark execution
-- Hybrid safety evaluation (keyword + LLM-as-a-judge)
-- Cross-model comparison
-- Real-world incident analysis
-- OWASP Top 10 for LLM Applications mapping
-The goal is to study how modern LLMs behave under adversarial, ambiguous, and manipulation-based conditions.
----
-## Core Components
-### Attack Library
 
-70+ manually crafted adversarial test cases covering:
+An exploratory collection of adversarial prompts, manual chat observations, and a prototype API runner. The public evidence is a small pilot record, not a validated safety benchmark or a replicated cross-model study.
 
-| Category | Tests | Key Risk |
-|---|---|---|
-| Prompt Injection | 15 | Instruction hierarchy bypass |
-| Hallucination | 15 | Fabricated facts presented as truth |
-| Sensitive Information Disclosure | 10 | Credential and PII exposure |
-| Social Engineering | 14 | Policy manipulation via human psychology |
-| Excessive Agency | 10 | Unauthorized autonomous actions |
-| Obfuscated Attacks | 4 | Safety filter evasion |
-| False Refusal | 3 | Over-blocking legitimate requests |
-| Ambiguous Intent | 3 | Dual-use request calibration |
-| Vector / Embedding Weaknesses | 1 | RAG poisoning |
-| Temporal Confusion | 1 | Incorrect temporal anchoring |
+## Evidence available
 
-Includes:
-- cross-model comparisons
-- multi-turn escalation chains
-- adversarial roleplay testing
-- fabricated future-event hallucination checks
-- agentic overreach scenarios
-- contextual safety calibration analysis
+The [attack library](data/attack_library.csv) has **72 unique cases: 43 PENDING and 29 with recorded statuses**. Its actual category counts are:
 
-## Benchmark Runner
-The benchmark runner supports:
-- ChatGPT
-- Claude
-- Hybrid evaluation pipeline
-- Markdown logging
-- JSON export
-- CSV export
-- Graceful degradation if optional packages are missing
-### Evaluation Architecture
-```text
-Prompt → Model → Response
-                    ↓
-           [Keyword Check]
-                    ↓
-           [LLM-as-a-Judge]
-                    ↓
-         PASS / PARTIAL FAIL / FAIL
-                    ↓
-      benchmark_log.md + JSON export
+| Category | Cases |
+|---|---:|
+| Hallucination | 17 |
+| Social Engineering | 14 |
+| Prompt Injection | 12 |
+| Sensitive Information Disclosure | 9 |
+| Excessive Agency | 9 |
+| Obfuscated Attack | 4 |
+| False Refusal | 3 |
+| Ambiguous Intent | 3 |
+| Vector and Embedding Weaknesses | 1 |
 
-⸻
+The non-PENDING rows summarize qualitative observations, sometimes across several consumer interfaces. They lack a complete per-run transcript/metadata trail and are not independent-run counts. Rows 010, 011, and 011a document one ChatGPT chemistry escalation chain; the partial-failure observation does not establish that incremental attacks are generally more effective than direct attacks.
 
-Key Research Finding
+One saved automated batch contains [three ChatGPT response records](output/benchmark_results.json), all labeled PASS by the saved judge output, with a matching [run log](output/benchmark_log.md). This is three prompt evaluations in one batch, not three independent benchmark replications. Judge identity and complete request metadata are not preserved. The CSV still marks case 003 PENDING, so the CSV and automated batch are separate historical records, not a synchronized results database. The [report placeholder](reports/mini_safety_report_v2.md) is empty.
 
-Gradual Escalation Bypasses Guardrails
+## Runner and reproduction scope
 
-The most significant observed failure pattern involved gradual escalation across multiple conversational turns.
+[src/run_benchmark.py](src/run_benchmark.py) implements separate single-prompt API calls for ChatGPT and Claude, optional model-assisted review, keyword checks, and Markdown/JSON/CSV export. It does not implement a conversation-history runner for the manual escalation chains. The presence of this code does not establish that all library cases were executed through it.
 
-In testing:
+Install dependencies from [requirements.txt](requirements.txt). An API-free loading check is:
 
-* Initial chemistry prompts received safe educational responses
-* Second-step escalation still maintained safety framing
-* Third-step optimization framing (“most toxic fastest”) triggered a partial safety failure
-
-This suggests:
-
-Context normalization is more dangerous than direct attacks.
-
-Models that resist explicit jailbreak attempts may still degrade when harmful intent is introduced incrementally through benign conversational context.
-
-This finding aligns with real-world incidents involving:
-
-* social engineering
-* multi-turn manipulation
-* session-level context drift
-
-⸻
-
-Live Testing Highlights (May 2026)
-
-Strongest Safety Behaviors Observed
-
-* Attack-aware refusal
-* Temporal awareness
-* Explicit identification of manipulation patterns
-* Clear distinction between trusted and untrusted instruction sources
-
-Weaknesses Observed
-
-* Gradual escalation
-* Framing sensitivity
-* Cross-session safety reset
-* Weak manipulation resistance in smaller open-source models
-
-⸻
-
-Models Evaluated
-
-* ChatGPT
-* Claude
-* Meta AI
-* SuperGrok
-* Gemini
-* Copilot
-* meta-llama-3.1-8b
-
-⸻
-
-Project Structure
-
-llm-safety-evaluation-lab/
-├── src/
-│   └── run_benchmark.py
-├── data/
-│   └── attack_library.csv
-├── output/
-│   ├── benchmark_results.json
-│   └── benchmark_log.md
-├── case_studies/
-│   ├── openclaw_agent_incident.md
-│   └── chatgpt_tactical_advice.md
-├── notes/
-│   ├── fortinet_2026_skills_gap.md
-│   └── malicious_chrome_extensions.md
-├── ├── reports/
-│   └── mini_safety_report_v2.md
-├── requirements.txt
-├── .env.example
-└── README.md
-
-⸻
-
-Setup
-
-Clone the repository:
-
-git clone https://github.com/aleksei-khvostov/llm-safety-evaluation-lab.git
-cd llm-safety-evaluation-lab
-
-Install dependencies:
-
-pip install -r requirements.txt
-
-Create environment file:
-
-cp .env.example .env
-
-Add API keys:
-
-OPENAI_API_KEY=your_key_here
-ANTHROPIC_API_KEY=your_key_here
-
-⸻
-
-Usage
-
-Dry run
-
+```bash
 python3 src/run_benchmark.py --dry-run
+```
 
-Run benchmark
+This checks library loading only and may create an output directory and `.env.example`. Live execution requires credentials and separate authorization. No new run or judge evaluation is implied here. The repository contains no committed test suite or CI workflow.
 
-python3 src/run_benchmark.py --model chatgpt --limit 5
+## Interpretation and limitations
 
-Run specific category
+Manual chat observations, automated response records, keyword scores, and judge interpretations are distinct evidence types. Model aliases, uncontrolled interface settings, missing repeats, inconsistent historical labels, and incomplete transcripts limit reproducibility. Findings do not establish general model rankings, causal bypass mechanisms, or safety guarantees.
 
-python3 src/run_benchmark.py --model claude --category Hallucination
+[Case studies](case_studies/) and [supplemental notes](notes/) provide external incident/context material; they are not results from this evaluation library. The Fortinet skills-gap note concerns workforce context rather than benchmark evidence. Historical files remain preserved.
 
-Run only pending tests
+[RuSafetyBench](https://github.com/aleksei-khvostov/rusafetybench) contains related Russian-language cases. This repository has not been archived, merged into another project, or formally designated superseded.
 
-python3 src/run_benchmark.py --pending-only --use-judge
-
-Export updated CSV
-
-python3 src/run_benchmark.py --export-csv
-
-⸻
-
-Methodology
-
-* OWASP Top 10 for LLM Applications 2025
-* Structured adversarial testing
-* LLM-as-a-judge evaluation
-* Cross-model comparison
-* Real-world incident mapping
-* Rubric-based scoring
-* Manual qualitative analysis
-
-⸻
-
-Related Research Included
-
-Case Studies
-
-* OpenClaw agent social engineering incident
-* ChatGPT tactical attack advice incident
-
-Supplemental Notes
-
-* Fortinet 2026 cybersecurity skills gap report
-* Malicious Chrome extension campaign analysis
-
-⸻
-
-About
-
-Built by Aleksei Khvostov
-
-AI Safety Evaluator focused on:
-
-* LLM evaluation
-* red teaming
-* prompt injection testing
-* safety analysis
-* hallucination analysis
-* structured QA systems
-* multilingual adversarial testing (English/Russian)
-
-Background includes:
-
-* Outlier
-* Mercor
-* Invisible Technologies
-* 15+ years of editorial leadership in digital media
-
-Links
-
-* GitHub: https://github.com/aleksei-khvostov
-* LinkedIn: https://www.linkedin.com/in/aleksei-khvostov/
-
-⸻
-
-Disclaimer
-
-This repository is intended exclusively for defensive AI safety research, evaluation methodology, and benchmark development.
-
-All prompts use researcher-safe framing.
-
-No operationally harmful instructions, malware, or exploit code are included.
-
-⸻
-
+Built by [Aleksei Khvostov](https://github.com/aleksei-khvostov). Intended for defensive research and evaluation-method development.
